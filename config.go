@@ -3,6 +3,7 @@ package ad
 import (
 	"errors"
 	"fmt"
+    "io/ioutil"
 	"net"
 )
 
@@ -34,6 +35,14 @@ func WithCA(rootca []byte) ConfigOption {
 	return func(cfg *Config) {
 		cfg.RootCA = rootca
 	}
+}
+
+func WithCAFile(path string) ConfigOption {
+    ca, err :=  ioutil.ReadFile(path)
+    if err != nil {
+        panic(err)
+    }
+    return WithCA(ca)
 }
 
 func NewConfig(domain string, options ...ConfigOption) (*Config, error) {
